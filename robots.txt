@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ramalingamthangamani.github.io/My_portfolio/sitemap.xml
