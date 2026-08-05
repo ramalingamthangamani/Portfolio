@@ -1,35 +1,59 @@
-# Ramalingam T — AI / ML & Deep Learning Engineer Portfolio
+# ⚡ Ramalingam T — AI / ML & Deep Learning Engineer Portfolio
 
-![Portfolio Preview](Ramalingam%20T.png)
+[![Live Demo](https://img.shields.io/badge/Live_Portfolio-Sky_Mint_%2B_Graphite-B8F7E4?style=for-the-badge&logo=googlechrome&logoColor=25272C)](https://ramalingamthangamani.github.io/My_portfolio/)
+[![GitHub Deployment](https://img.shields.io/github/deployments/ramalingamthangamani/My_portfolio/github-pages?style=for-the-badge&label=Deployment&color=25272C)](https://ramalingamthangamani.github.io/My_portfolio/)
+[![License](https://img.shields.io/badge/License-MIT-B8F7E4?style=for-the-badge&color=25272C)](LICENSE)
 
-Production-ready, ultra-responsive personal portfolio website for **Ramalingam T**, AI/ML & Deep Learning Engineer. Designed with modern web aesthetics, dynamic hardware-accelerated canvas animations, Lenis smooth scrolling, and optimized for performance, accessibility, and SEO.
-
-## 🚀 Live Demo
-
-- **GitHub Pages**: [https://ramalingamthangamani.github.io/My_portfolio/](https://ramalingamthangamani.github.io/My_portfolio/)
+Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep Learning Engineer. This project showcases production-grade web architecture, hardware-accelerated interactive canvas visualizers, custom scroll engines, and an end-to-end overview of research & engineering applications in **Edge AI, Multimodal NLP, Computer Vision, and Agentic Systems**.
 
 ---
 
-## ⚡ Tech Stack & Features
+## 🔬 Core Focus Areas
 
-- **Frontend Core**: Semantic HTML5, Modular Modern CSS3, Vanilla JavaScript (ES6+).
-- **Visuals & Effects**:
-  - HTML5 Canvas Oscilloscope & Signal Wave visualizer.
-  - Ambient Parallax Glowing Orbs & Spotlight cursor tracking.
-  - Multi-directional IntersectionObserver scroll reveal engine.
-  - Dynamic Activity Showcase carousel with auto-fading image switcher.
-- **Performance & Smoothness**: Integrated Lenis smooth scroll engine.
-- **SEO & Metadata**: Complete Schema.org JSON-LD structured data, OpenGraph tags, Twitter Cards, `sitemap.xml`, and `robots.txt`.
-- **CI/CD Deployment**: Automated deployment pipeline using GitHub Actions (`.github/workflows/deploy.yml`).
+- **Edge AI & Real-Time Inference**: Low-latency model execution on constrained edge devices and wearable hardware.
+- **Multimodal NLP & Agentic Systems**: Autonomous decision pipelines, LLM prompt inspection, and offline voice intelligence.
+- **Computer Vision & Automated Video Pipelines**: Object detection, automated clipping, and signal processing for sports analytics & healthcare.
+- **Spatial / XR Human-Computer Interaction**: Blending real-time sensor streams with 3D/VR environments in Unity & Blender.
+
+---
+
+## 🚀 Key Projects Highlighted
+
+| Project | Description | Core Stack |
+| :--- | :--- | :--- |
+| **IWI — Intelligent Wearable Interface** | Real-time gesture recognition glove translating human hand motion into text/speech via low-latency edge ML. | `Edge ML` · `Sensors` · `Gesture AI` |
+| **Thozhan — Offline Voice AI** | Privacy-first desktop assistant combining Whisper & SpeechBrain for biometric authentication & Tanglish voice intent parsing. | `Whisper` · `SpeechBrain` · `Offline NLP` |
+| **AI Prescription Parser** | Converts handwritten/digital medical prescriptions into structured health records (EHR) using OCR & NLP. | `OCR` · `NLP` · `Healthcare Automation` |
+| **AI-Powered Medical Assistant** | Agentic system monitoring patient clinical parameters and delivering LLM-driven optimization insight in real-time. | `Agentic AI` · `LLM` · `HealthTech` |
+| **Agentic System Analyzer** | Diagnostic evaluation platform inspecting API latency, prompt efficiency, and computational bottlenecks in LLM pipelines. | `LLMOps` · `Pipeline Analysis` · `Optimization` |
+| **Social Radar** | Real-time trend aggregator monitoring social streams for emerging keyword detection and live sentiment scoring. | `Sentiment Analysis` · `Real-Time Data Viz` |
+
+---
+
+## 🛠 Technical Stack & Tools
+
+- **Artificial Intelligence & Data Science**: Transformers, Multimodal AI Systems, Edge AI, PyTorch/TensorFlow, Model Optimization, OpenCV, MLOps.
+- **Languages**: Python, Java, JavaScript (ES6+), C++.
+- **3D & XR Development**: Unity 3D, Blender, VR/Spatial HCI.
+- **Tools & Infrastructure**: GitHub Actions CI/CD, Google Colab, n8n Automation, Roboflow, Figma.
+
+---
+
+## 🎨 Design System & Visual Architecture
+
+- **Color Palette**: Custom **Sky Mint** (`#B8F7E4`) + **Graphite** (`#25272C`) color space.
+- **Canvas Visualizer**: Hardware-accelerated HTML5 Canvas Oscilloscope rendering real-time wave signals and interactive mouse-tracking harmonics.
+- **Scroll & Reveal Engine**: Integrated Lenis smooth scroll engine paired with multi-directional `IntersectionObserver` keyframe animations.
+- **Production SEO**: Schema.org JSON-LD structured metadata, OpenGraph cards, `robots.txt`, and `sitemap.xml`.
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-├── index.html                  # Main Portfolio HTML application
-├── Ramalingam T.png            # Profile headshot asset
-├── portfolio images/           # Showcase image gallery
+.
+├── index.html                  # Main Portfolio single-page web application
+├── portfolio images/           # Activity showcase & event imagery
 │   ├── ai_outreach_school.jpeg
 │   ├── ai_unity_session.jpeg
 │   ├── project_discussion.jpeg
@@ -37,36 +61,40 @@ Production-ready, ultra-responsive personal portfolio website for **Ramalingam T
 │   └── smart_glove_presentation.jpeg
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # GitHub Actions deployment workflow
-├── .gitignore                  # Git ignore directives
-├── .nojekyll                   # GitHub Pages static bypass
-├── robots.txt                  # Search engine crawler directives
-└── sitemap.xml                 # Search engine sitemap
+│       └── deploy.yml          # GitHub Actions automated deployment workflow
+├── .gitignore                  # Git ignore rules for clean repository state
+├── .nojekyll                   # Bypasses Jekyll build for GitHub Pages
+├── robots.txt                  # Search engine crawler permissions
+└── sitemap.xml                 # Search engine site structure index
 ```
 
 ---
 
-## 🌐 Deployment Instructions
+## 🌐 Local Setup & Deployment
 
-### Option 1: Automatic Deployment via GitHub Actions
-This repository includes a pre-configured GitHub Actions workflow in `.github/workflows/deploy.yml`.
-1. Push your changes to the `main` branch.
-2. In your GitHub repository settings under **Settings > Pages**:
-   - Set **Source** to **GitHub Actions**.
-3. GitHub Actions will automatically build and publish your site.
+### Run Locally
+Simply open `index.html` in any modern web browser or serve via a local static server:
 
-### Option 2: Deploy via Vercel / Netlify
-1. Connect your GitHub repository (`https://github.com/ramalingamthangamani/My_portfolio.git`) to Vercel or Netlify.
-2. Build command: *(leave empty)*
-3. Publish directory: `./`
+```bash
+# Using Python builtin HTTP server
+python -m http.server 8000
+```
+Navigate to `http://localhost:8000`.
+
+### CI/CD Deployment to GitHub Pages
+Automatic deployment is configured via `.github/workflows/deploy.yml`:
+1. Push any updates to the `main` branch.
+2. Ensure **GitHub Pages > Source** is set to **GitHub Actions** in repository settings.
 
 ---
 
-## 📬 Contact Information
+## 📬 Contact & Professional Links
 
 - **Email**: [ramalingamthangamani2023@gmail.com](mailto:ramalingamthangamani2023@gmail.com)
 - **LinkedIn**: [linkedin.com/in/ramalingam05](https://www.linkedin.com/in/ramalingam05)
 - **GitHub**: [github.com/ramalingamthangamani](https://github.com/ramalingamthangamani)
 - **Figma Portfolio**: [Figma Interactive Prototype](https://www.figma.com/proto/o5HJb6UHcOmvJiHmUWKDx4)
 
-© 2026 Ramalingam T. All rights reserved.
+---
+
+*© 2026 Ramalingam T. All rights reserved.*
