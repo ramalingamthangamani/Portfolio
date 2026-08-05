@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ramalingamthangamani.github.io/My_portfolio/sitemap.xml
+Sitemap: https://ramalingamportfolio.vercel.app/sitemap.xml

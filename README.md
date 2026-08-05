@@ -1,7 +1,7 @@
 # ⚡ Ramalingam T — AI / ML & Deep Learning Engineer Portfolio
 
-[![Live Demo](https://img.shields.io/badge/Live_Portfolio-Sky_Mint_%2B_Graphite-B8F7E4?style=for-the-badge&logo=googlechrome&logoColor=25272C)](https://ramalingamthangamani.github.io/My_portfolio/)
-[![GitHub Deployment](https://img.shields.io/github/deployments/ramalingamthangamani/My_portfolio/github-pages?style=for-the-badge&label=Deployment&color=25272C)](https://ramalingamthangamani.github.io/My_portfolio/)
+[![Live Demo](https://img.shields.io/badge/Live_Portfolio-Vercel_App-B8F7E4?style=for-the-badge&logo=vercel&logoColor=25272C)](https://ramalingamportfolio.vercel.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-25272C?style=for-the-badge&logo=github&logoColor=B8F7E4)](https://github.com/ramalingamthangamani/My_portfolio)
 [![License](https://img.shields.io/badge/License-MIT-B8F7E4?style=for-the-badge&color=25272C)](LICENSE)
 
 Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep Learning Engineer. This project showcases production-grade web architecture, hardware-accelerated interactive canvas visualizers, custom scroll engines, and an end-to-end overview of research & engineering applications in **Edge AI, Multimodal NLP, Computer Vision, and Agentic Systems**.
@@ -70,7 +70,11 @@ Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep L
 
 ---
 
-## 🌐 Local Setup & Deployment
+## 🌐 Live Production & Local Setup
+
+### Live Production Deployment
+- **Vercel Live App**: [https://ramalingamportfolio.vercel.app/](https://ramalingamportfolio.vercel.app/)
+- **GitHub Repository**: [https://github.com/ramalingamthangamani/My_portfolio](https://github.com/ramalingamthangamani/My_portfolio)
 
 ### Run Locally
 Simply open `index.html` in any modern web browser or serve via a local static server:
@@ -81,10 +85,9 @@ python -m http.server 8000
 ```
 Navigate to `http://localhost:8000`.
 
-### CI/CD Deployment to GitHub Pages
-Automatic deployment is configured via `.github/workflows/deploy.yml`:
-1. Push any updates to the `main` branch.
-2. Ensure **GitHub Pages > Source** is set to **GitHub Actions** in repository settings.
+### Continuous Deployment (Vercel & GitHub Actions)
+- **Vercel**: Automatic continuous deployment from `main` branch.
+- **GitHub Pages**: Automated via `.github/workflows/deploy.yml`.
 
 ---
 
