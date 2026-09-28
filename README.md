@@ -41,10 +41,13 @@ Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep L
 
 ## 🎨 Design System & Visual Architecture
 
-- **Color Palette**: Custom **Sky Mint** (`#B8F7E4`) + **Graphite** (`#25272C`) color space.
-- **Canvas Visualizer**: Hardware-accelerated HTML5 Canvas Oscilloscope rendering real-time wave signals and interactive mouse-tracking harmonics.
-- **Scroll & Reveal Engine**: Integrated Lenis smooth scroll engine paired with multi-directional `IntersectionObserver` keyframe animations.
-- **Production SEO**: Schema.org JSON-LD structured metadata, OpenGraph cards, `robots.txt`, and `sitemap.xml`.
+- **Palette**: Paper (`#EFECE6`) and Ink (`#0E0E10`) editorial system with a single Klein-blue signal accent (`#2B2BF5`); dark "chapters" for Selected Work and Contact.
+- **Typography**: Geist (display & body), Geist Mono (metadata), Instrument Serif italic (accents).
+- **Hero Signal Field**: Canvas dot-matrix interference field that bends around the cursor and ripples on click/tap.
+- **Live Project Visuals**: Each project has its own generative canvas — hand-landmark gestures (IWI), radial voice waveform (Thozhan), OCR scan-to-record (Prescription Parser), sweep monitor with an agent loop (Medical Assistant), congested pipeline graph (Agentic Analyzer), radar sweep (Social Radar). Canvases only animate while on screen.
+- **Motion**: GSAP + ScrollTrigger (pinned horizontal project gallery, word-mask reveals, scroll-inked manifesto) with Lenis smooth scroll; custom blend-mode cursor, magnetic buttons, hover image previews.
+- **Resilience & Accessibility**: Content is fully readable if the CDN scripts fail; `prefers-reduced-motion` disables smooth scroll, pinning and animation; skip link, focus styles, semantic landmarks.
+- **Production SEO**: Schema.org `Person` JSON-LD, canonical URL, OpenGraph/Twitter cards (`assets/img/og.jpg`), `robots.txt`, `sitemap.xml`.
 
 ---
 
@@ -52,20 +55,19 @@ Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep L
 
 ```text
 .
-├── index.html                  # Main Portfolio single-page web application
-├── portfolio images/           # Activity showcase & event imagery
-│   ├── ai_outreach_school.jpeg
-│   ├── ai_unity_session.jpeg
-│   ├── project_discussion.jpeg
-│   ├── project_presentation.jpeg
-│   └── smart_glove_presentation.jpeg
-├── .github/
-│   └── workflows/
-│       └── deploy.yml          # GitHub Actions automated deployment workflow
-├── .gitignore                  # Git ignore rules for clean repository state
-├── .nojekyll                   # Bypasses Jekyll build for GitHub Pages
-├── robots.txt                  # Search engine crawler permissions
-└── sitemap.xml                 # Search engine site structure index
+├── index.html                  # Single-page portfolio
+├── assets/
+│   ├── css/main.css            # Design system & layout
+│   ├── js/main.js              # Loader, scroll motion, cursor, navigation
+│   ├── js/visuals.js           # Hero signal field + per-project canvas visuals
+│   └── img/                    # Optimised WebP photography, portrait, OG card
+├── resume/
+│   └── Ramalingam_T_Resume.pdf # Downloadable résumé
+├── portfolio images/           # Original full-resolution event photos (source files)
+├── Ramalingam T.png            # Original portrait (source file)
+├── .github/workflows/deploy.yml
+├── robots.txt
+└── sitemap.xml
 ```
 
 ---
