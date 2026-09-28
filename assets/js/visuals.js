@@ -361,63 +361,72 @@
   }
 
   /* =========================================================
-     P-04 Medical assistant — sweep monitor with three channels
+     P-04 PortInspector — a scanner sweeping a port grid, with
+     open ports lighting up and landing in a live service log
      ========================================================= */
-  function ecg(p) {
-    const g = (c, wd, a) => a * Math.exp(-Math.pow((p - c) / wd, 2));
-    return g(0.16, 0.035, 0.12) + g(0.33, 0.012, -0.12) + g(0.36, 0.014, 1) + g(0.39, 0.014, -0.28) + g(0.62, 0.06, 0.28);
-  }
-  function drawMonitor(ctx, w, h, t) {
-    const left = w * 0.06, right = w * 0.74, W = right - left;
-    const speed = W / 3.2;
-    const sweep = (t * speed) % W;
-    const chans = [
-      { y: h * 0.36, amp: h * 0.15, fn: (tt) => ecg((tt / 0.95) % 1), color: LITE(1), lw: 1.8 },
-      { y: h * 0.62, amp: h * 0.06, fn: (tt) => Math.sin(tt * 1.6) * 0.8 + Math.sin(tt * 0.4) * 0.2, color: BONE(0.7), lw: 1.3 },
-      { y: h * 0.82, amp: h * 0.05, fn: (tt) => Math.round(Math.sin(tt * 0.9) * 2 + Math.sin(tt * 3.1)) / 3, color: BONE(0.45), lw: 1.3 },
-    ];
-    // grid
-    ctx.strokeStyle = BONE(0.05); ctx.lineWidth = 1;
-    for (let x = left; x <= right; x += 22) { ctx.beginPath(); ctx.moveTo(x, h * 0.2); ctx.lineTo(x, h * 0.92); ctx.stroke(); }
-    for (let y = h * 0.2; y <= h * 0.92; y += 22) { ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke(); }
-
-    chans.forEach((c) => {
-      ctx.strokeStyle = c.color; ctx.lineWidth = c.lw; ctx.lineJoin = 'round';
-      ctx.beginPath();
-      let pen = false;
-      for (let x = 0; x <= W; x += 1.5) {
-        const ahead = x > sweep ? x - sweep : x - sweep + W;
-        if (ahead > 0 && ahead < 26) { pen = false; continue; }
-        const tt = x <= sweep ? t - (sweep - x) / speed : t - (sweep + W - x) / speed;
-        const y = c.y - c.fn(tt) * c.amp;
-        pen ? ctx.lineTo(left + x, y) : ctx.moveTo(left + x, y);
-        pen = true;
-      }
-      ctx.stroke();
-      // sweep head
-      const tt = t, y = c.y - c.fn(tt) * c.amp;
-      ctx.fillStyle = c.color; ctx.beginPath(); ctx.arc(left + sweep, y, 2.6, 0, TAU); ctx.fill();
-    });
-
-    // agent column — observe → reason → act loop
-    const ax = w * 0.85, steps = 3, span = h * 0.5, top = h * 0.3;
-    const active = Math.floor(t * 0.9) % steps;
-    ctx.strokeStyle = BONE(0.2); ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(ax, top); ctx.lineTo(ax, top + span); ctx.stroke();
-    for (let i = 0; i < steps; i++) {
-      const y = top + (span / (steps - 1)) * i;
-      const on = i === active;
-      if (on) {
-        const pr = (t * 0.9) % 1;
-        ctx.strokeStyle = LITE(1 - pr); ctx.beginPath(); ctx.arc(ax, y, 8 + pr * 18, 0, TAU); ctx.stroke();
-      }
-      ctx.fillStyle = on ? LITE(1) : '#1A1A1D'; ctx.strokeStyle = on ? LITE(1) : BONE(0.5); ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(ax, y, 7, 0, TAU); ctx.fill(); ctx.stroke();
+  const PORTS = (() => {
+    const known = { 3: [22, 'ssh'], 9: [80, 'http'], 14: [443, 'https'], 20: [3000, 'node'], 27: [5432, 'postgres'], 33: [6379, 'redis'], 38: [8080, 'proxy'], 44: [11434, 'ollama'] };
+    const r = rng(404), cells = [];
+    for (let i = 0; i < 48; i++) {
+      cells.push(known[i] ? { open: true, port: known[i][0], svc: known[i][1] } : { open: false, filtered: r() < 0.18 });
     }
-    // loop-back arc
-    ctx.strokeStyle = LITE(0.35); ctx.setLineDash([3, 4]);
-    ctx.beginPath(); ctx.ellipse(ax, top + span / 2, Math.min(w * 0.08, span / 2), span / 2, 0, -Math.PI / 2, Math.PI / 2); ctx.stroke();
-    ctx.setLineDash([]);
+    return cells;
+  })();
+  function drawPorts(ctx, w, h, t) {
+    const cols = 8, rows = 6, n = cols * rows;
+    const gx = w * 0.06, gy = h * 0.2, gw = w * 0.52, gh = h * 0.66;
+    const cw = gw / cols, ch = gh / rows, pad = Math.min(cw, ch) * 0.14;
+    const cycle = 7, tt = t % cycle;
+    const head = Math.min(n, (tt / (cycle - 1.4)) * n);   // cells scanned so far
+    const fs = Math.max(9, Math.min(12, w * 0.016));
+    ctx.font = `500 ${fs}px "Geist Mono", monospace`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+    for (let i = 0; i < n; i++) {
+      const c = PORTS[i], x = gx + (i % cols) * cw, y = gy + Math.floor(i / cols) * ch;
+      const scanned = i < head, current = i === Math.floor(head);
+      ctx.lineWidth = 1;
+      if (scanned && c.open) {
+        const age = clamp((head - i) / 6, 0, 1);
+        ctx.fillStyle = LITE(0.9 - age * 0.45); ctx.strokeStyle = LITE(1);
+      } else {
+        ctx.fillStyle = scanned ? (c.filtered ? BONE(0.1) : BONE(0.04)) : '#1A1A1D';
+        ctx.strokeStyle = current ? LITE(1) : BONE(scanned ? 0.16 : 0.1);
+      }
+      ctx.beginPath(); ctx.rect(x + pad, y + pad, cw - pad * 2, ch - pad * 2); ctx.fill(); ctx.stroke();
+      if (scanned && c.open && cw > 34) {
+        ctx.fillStyle = '#1A1A1D';
+        ctx.fillText(String(c.port), x + cw / 2, y + ch / 2);
+      }
+    }
+    // scan head
+    if (head < n) {
+      const i = Math.floor(head), x = gx + (i % cols) * cw + cw / 2, y = gy + Math.floor(i / cols) * ch + ch / 2;
+      const pr = (t * 3) % 1;
+      ctx.strokeStyle = LITE(0.8 * (1 - pr)); ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(x, y, 6 + pr * 16, 0, TAU); ctx.stroke();
+    }
+
+    // live service log
+    const lx = w * 0.64, ly = gy, lh = fs * 1.9;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = BONE(0.45);
+    ctx.fillText('$ portinspector scan', lx, ly);
+    let row = 1;
+    for (let i = 0; i < n && i < head; i++) {
+      const c = PORTS[i];
+      if (!c.open) continue;
+      const y = ly + row * lh;
+      if (y > gy + gh) break;
+      ctx.fillStyle = LITE(0.95); ctx.fillText(String(c.port).padEnd(6), lx, y);
+      ctx.fillStyle = BONE(0.7); ctx.fillText(c.svc, lx + fs * 3.9, y);
+      ctx.fillStyle = BONE(0.35); ctx.fillText('open', lx + fs * 9, y);
+      row++;
+    }
+    if (head < n && Math.floor(t * 2) % 2 === 0) {
+      ctx.fillStyle = BONE(0.8); ctx.fillRect(lx, ly + row * lh - fs * 0.55, fs * 0.6, fs * 1.1);
+    }
+    ctx.textBaseline = 'alphabetic';
   }
 
   /* =========================================================
@@ -542,7 +551,7 @@
     ctx.fillStyle = LITE(1); ctx.beginPath(); ctx.arc(cx, cy, 3, 0, TAU); ctx.fill();
   }
 
-  const PROJECT_VIS = { hand: drawHand, voice: drawVoice, parser: drawParser, monitor: drawMonitor, pipeline: drawPipeline, radar: drawRadar };
+  const PROJECT_VIS = { hand: drawHand, voice: drawVoice, parser: drawParser, ports: drawPorts, pipeline: drawPipeline, radar: drawRadar };
 
   function initProjects() {
     document.querySelectorAll('canvas[data-vis]').forEach((c) => {

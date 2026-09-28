@@ -24,7 +24,7 @@ Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep L
 | **IWI — Intelligent Wearable Interface** | Real-time gesture recognition glove translating human hand motion into text/speech via low-latency edge ML. | `Edge ML` · `Sensors` · `Gesture AI` |
 | **Thozhan — Offline Voice AI** | Privacy-first desktop assistant combining Whisper & SpeechBrain for biometric authentication & Tanglish voice intent parsing. | `Whisper` · `SpeechBrain` · `Offline NLP` |
 | **AI Prescription Parser** | Converts handwritten/digital medical prescriptions into structured health records (EHR) using OCR & NLP. | `OCR` · `NLP` · `Healthcare Automation` |
-| **AI-Powered Medical Assistant** | Agentic system monitoring patient clinical parameters and delivering LLM-driven optimization insight in real-time. | `Agentic AI` · `LLM` · `HealthTech` |
+| **PortInspector** | Cross-platform CLI for real-time network port monitoring — scan open ports, identify services and diagnose connectivity and process-level issues. | `CLI` · `Networking` · `Cross-Platform` |
 | **Agentic System Analyzer** | Diagnostic evaluation platform inspecting API latency, prompt efficiency, and computational bottlenecks in LLM pipelines. | `LLMOps` · `Pipeline Analysis` · `Optimization` |
 | **Social Radar** | Real-time trend aggregator monitoring social streams for emerging keyword detection and live sentiment scoring. | `Sentiment Analysis` · `Real-Time Data Viz` |
 
@@ -33,7 +33,7 @@ Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep L
 ## 🛠 Technical Stack & Tools
 
 - **Artificial Intelligence & Data Science**: Transformers, Multimodal AI Systems, Edge AI, PyTorch/TensorFlow, Model Optimization, OpenCV, MLOps.
-- **Languages**: Python, Java, JavaScript (ES6+), C++.
+- **Languages**: Python, Java, SQL, JavaScript (ES6+), C++.
 - **3D & XR Development**: Unity 3D, Blender, VR/Spatial HCI.
 - **Tools & Infrastructure**: GitHub Actions CI/CD, Google Colab, n8n Automation, Roboflow, Figma.
 
@@ -44,7 +44,7 @@ Welcome to the official portfolio repository of **Ramalingam T**, AI/ML & Deep L
 - **Palette**: Paper (`#EFECE6`) and Ink (`#0E0E10`) editorial system with a single Klein-blue signal accent (`#2B2BF5`); dark "chapters" for Selected Work and Contact.
 - **Typography**: Geist (display & body), Geist Mono (metadata), Instrument Serif italic (accents).
 - **Hero Signal Field**: Canvas dot-matrix interference field that bends around the cursor and ripples on click/tap.
-- **Live Project Visuals**: Each project has its own generative canvas — hand-landmark gestures (IWI), radial voice waveform (Thozhan), OCR scan-to-record (Prescription Parser), sweep monitor with an agent loop (Medical Assistant), congested pipeline graph (Agentic Analyzer), radar sweep (Social Radar). Canvases only animate while on screen.
+- **Live Project Visuals**: Each project has its own generative canvas — hand-landmark gestures (IWI), radial voice waveform (Thozhan), OCR scan-to-record (Prescription Parser), port-grid scan with a live service log (PortInspector), congested pipeline graph (Agentic Analyzer), radar sweep (Social Radar). Canvases only animate while on screen.
 - **Motion**: GSAP + ScrollTrigger (pinned horizontal project gallery, word-mask reveals, scroll-inked manifesto) with Lenis smooth scroll; custom blend-mode cursor, magnetic buttons, hover image previews.
 - **Resilience & Accessibility**: Content is fully readable if the CDN scripts fail; `prefers-reduced-motion` disables smooth scroll, pinning and animation; skip link, focus styles, semantic landmarks.
 - **Production SEO**: Schema.org `Person` JSON-LD, canonical URL, OpenGraph/Twitter cards (`assets/img/og.jpg`), `robots.txt`, `sitemap.xml`.
