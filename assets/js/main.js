@@ -61,19 +61,104 @@
   }
 
   /* ---------- Fit the hero name to the viewport width ---------- */
-  const heroName = $('#heroName');
+  const hero = $('.hero');
+  const heroName = $('#heroName'), heroGhost = $('#heroGhost');
   const heroChars = heroName ? splitChars(heroName) : [];
+  const heroMasks = heroChars.map((c) => c.parentElement);
+  if (heroGhost) splitChars(heroGhost);
+  const lensMap = { centers: [], h: 0 };
+  let heroSize = 0;
   function fitHero() {
     if (!heroName) return;
+    // measure at the resting weight so the lens can only ever make letters narrower
+    heroChars.forEach((c) => c.style.removeProperty('--w'));
     const box = heroName.parentElement.getBoundingClientRect().width;
     heroName.style.fontSize = '100px';
     heroName.style.display = 'inline-block';
     const natural = heroName.getBoundingClientRect().width;
     heroName.style.display = '';
-    const size = Math.min((100 * box) / natural, window.innerHeight * 0.46);
-    heroName.style.fontSize = size.toFixed(2) + 'px';
+    heroSize = Math.min((100 * box) / natural, window.innerHeight * 0.6);
+    heroName.style.fontSize = heroSize.toFixed(2) + 'px';
+    if (heroGhost) heroGhost.style.fontSize = heroName.style.fontSize;
+    lensMap.centers = heroMasks.map((m) => m.offsetLeft + m.offsetWidth / 2);
+    lensMap.h = heroName.offsetHeight;
   }
   fitHero();
+
+  /* ---------- Hero: weight lens, depth parallax, pointer light, timecode ---------- */
+  // Letters near the pointer thin out and glow blue; with no pointer, a slow scan sweeps the name.
+  const lens = { x: -9999, y: 0, tx: 0, ty: 0, amp: 0, on: false, gx: 0.7, gy: 0.4, px: 0.7, py: 0.4, idleSince: performance.now() + 4200 };
+  const heroTC = $('#heroTC');
+  if (hero && heroName && !REDUCED) {
+    const title = heroName.parentElement;
+    const par = { x: 0, y: 0 };
+    const weights = heroChars.map(() => 900);
+    const t0 = performance.now();
+    let visible = true, lastF = -1;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+      const r = title.getBoundingClientRect(), hr = hero.getBoundingClientRect();
+      lens.tx = e.clientX - r.left; lens.ty = e.clientY - r.top;
+      if (!lens.on) { lens.x = lens.tx; lens.y = lens.ty; }
+      lens.px = (e.clientX - hr.left) / hr.width; lens.py = (e.clientY - hr.top) / hr.height;
+      lens.on = true;
+    });
+    hero.addEventListener('pointerleave', () => { lens.on = false; lens.idleSince = performance.now(); });
+
+    const pad = (n) => String(n).padStart(2, '0');
+    (function run(now) {
+      requestAnimationFrame(run);
+      if (!visible) return;
+      const t = (now - t0) / 1000;
+
+      // 24 fps timecode
+      const f = Math.floor(t * 24);
+      if (heroTC && f !== lastF) {
+        lastF = f;
+        const s = Math.floor(f / 24);
+        heroTC.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}:${pad(f % 24)}`;
+      }
+
+      // where the lens should be
+      let amp = 0, px = 0.5 + Math.sin(t * 0.21) * 0.28, py = 0.42 + Math.cos(t * 0.17) * 0.12;
+      if (lens.on) {
+        amp = 1; px = lens.px; py = lens.py;
+        lens.x += (lens.tx - lens.x) * 0.16; lens.y += (lens.ty - lens.y) * 0.16;
+      } else {
+        const idle = (now - lens.idleSince) / 1000 - 1.2;
+        const p = idle > 0 ? (idle % 7) / 7 : 1;
+        if (p < 0.55) {
+          const u = p / 0.55, e = u * u * (3 - 2 * u);
+          const w = title.offsetWidth;
+          lens.x = -0.2 * w + e * 1.4 * w; lens.y = lensMap.h / 2;
+          amp = 0.8 * Math.sin(Math.PI * u);
+        }
+      }
+      lens.amp += (amp - lens.amp) * 0.1;
+
+      const sigma = heroSize * 0.36;
+      const fy = Math.exp(-Math.pow((lens.y - lensMap.h / 2) / (heroSize * 0.95), 2));
+      heroChars.forEach((c, i) => {
+        const dx = lensMap.centers[i] - lens.x;
+        const k = lens.amp * fy * Math.exp(-(dx * dx) / (2 * sigma * sigma));
+        const w = 900 - 760 * k;
+        if (Math.abs(w - weights[i]) > 0.5) {
+          weights[i] = w;
+          c.style.setProperty('--w', w.toFixed(0));
+          c.style.setProperty('--h', k.toFixed(3));
+        }
+      });
+
+      // pointer light + depth parallax (the hollow echo drifts against the pointer)
+      lens.gx += (px - lens.gx) * 0.06; lens.gy += (py - lens.gy) * 0.06;
+      hero.style.setProperty('--glow-x', (lens.gx * 100).toFixed(2) + '%');
+      hero.style.setProperty('--glow-y', (lens.gy * 100).toFixed(2) + '%');
+      par.x += ((lens.gx - 0.5) - par.x) * 0.08; par.y += ((lens.gy - 0.5) - par.y) * 0.08;
+      if (heroGhost) heroGhost.style.translate = `${(-par.x * heroSize * 0.15).toFixed(2)}px ${(-par.y * heroSize * 0.1).toFixed(2)}px`;
+      heroName.style.translate = `${(par.x * 12).toFixed(2)}px ${(par.y * 8).toFixed(2)}px`;
+    })(performance.now());
+  }
 
   /* ---------- Toast + copy email ---------- */
   const toast = $('#toast');
@@ -232,6 +317,7 @@
      ========================================================= */
   const loader = $('#loader');
   if (!HAS_GSAP || REDUCED) {
+    if (heroName) heroName.classList.add('is-landed');
     const done = () => { loader && loader.remove(); document.body.classList.remove('is-loading'); };
     if (REDUCED) done(); else setTimeout(done, 300);
     return;
@@ -255,16 +341,38 @@
     lenis.stop();
   }
 
-  /* ---------- Hero intro (hidden behind the loader until it lifts) ---------- */
+  /* ---------- Hero intro: a title card (built once the fonts are in, hidden behind the loader) ---------- */
   const heroFades = $$('[data-hero-fade]');
-  const heroT = $('.hero__t .serif');
-  const intro = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
-  intro
-    .from(heroChars, { yPercent: 115, duration: 1.4, stagger: 0.045 }, 0)
-    .from(heroT, { yPercent: 60, rotate: -14, opacity: 0, duration: 1.4 }, 0.35)
-    .from(heroFades, { y: 24, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.5)
-    .from('#heroField', { opacity: 0, duration: 2, ease: 'power2.out' }, 0.2)
-    .from('.nav', { yPercent: -100, opacity: 0, duration: 1, clearProps: 'transform,opacity' }, 0.6);
+  const mid = (heroMasks.length - 1) / 2;
+  function buildIntro() {
+    return gsap.timeline({ paused: true, defaults: { ease: 'expo.out' }, onComplete: landHero })
+      // letterbox is closed while the name rises out of blur, its tracking collapsing from wide to tight
+      .fromTo('.hero__bars i', { scaleY: 1 }, { scaleY: 0, duration: 1.6, ease: 'expo.inOut' }, 1.05)
+      .from(heroChars, { yPercent: 120, filter: 'blur(16px)', duration: 1.7, stagger: { each: 0.055, from: 'center' }, clearProps: 'filter' }, 0)
+      .from(heroMasks, { x: (i) => (i - mid) * heroSize * 0.14, duration: 2.3, ease: 'expo.inOut' }, 0)
+      .fromTo('.hero__flare', { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 1, ease: 'expo.out' }, 0.95)
+      .to('.hero__flare', { opacity: 0, duration: 1.3, ease: 'power2.out' }, 1.45)
+      .from(heroGhost, { opacity: 0, scale: 1.12, duration: 2.6, ease: 'power3.out' }, 0.9)
+      .from('#heroField', { opacity: 0, duration: 2.4, ease: 'power2.out' }, 0.4)
+      .from('.hero__glow', { opacity: 0, duration: 2.4, ease: 'power2.out' }, 0.8)
+      .from(heroFades, { y: 24, opacity: 0, duration: 1.1, stagger: 0.08 }, 1.3)
+      .from('.hero__frame i', { opacity: 0, scale: 0.3, duration: 1, stagger: 0.07 }, 1.5)
+      .from('.nav', { yPercent: -100, opacity: 0, duration: 1, clearProps: 'transform,opacity' }, 1.4);
+  }
+
+  /* ---------- Hero scroll-out: the name breaks apart and the scene fades to black ---------- */
+  function landHero() {
+    heroName.classList.add('is-landed');
+    lens.idleSince = Math.min(lens.idleSince, performance.now());
+    gsap.timeline({
+      defaults: { ease: 'power1.in' },
+      scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true },
+    })
+      .to(heroMasks, { x: (i) => (i - mid) * heroSize * 0.32, yPercent: (i) => -Math.abs(i - mid) * 9, opacity: 0, filter: 'blur(10px)' }, 0)
+      .to(heroGhost, { scale: 1.3, opacity: 0 }, 0)
+      .to('.hero__meta, .hero__row, .hero__frame', { y: -90, opacity: 0 }, 0)
+      .to('.hero__shade', { opacity: 0.9, ease: 'none' }, 0);
+  }
 
   /* ---------- Preloader ---------- */
   const count = $('#loaderCount'), lbar = $('#loaderBar');
@@ -279,6 +387,7 @@
   Promise.race([Promise.all([fontsReady, minTime]), maxTime]).then(() => {
     fitHero();
     ScrollTrigger.refresh();
+    const intro = buildIntro();
     gsap.timeline()
       .to(counter, {
         v: 100, duration: 0.45, ease: 'power2.out',

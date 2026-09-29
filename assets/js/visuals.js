@@ -12,6 +12,7 @@
   const BONE = (a) => `rgba(237,234,227,${a})`;
   const LITE = (a) => `rgba(138,138,255,${a})`;
   const SIGNAL = '#2B2BF5';
+  const FIELD_HOT = '#5C5CFF';   // signal blue lifted so it reads on the dark hero
 
   // Small deterministic PRNG so layouts are stable between frames and reloads
   function rng(seed) {
@@ -128,8 +129,8 @@
         }
         const hot = Math.max(f, rf);
         const r = 0.7 + (v + 1.6) * 0.42 + hot * 2.2;
-        ctx.globalAlpha = clamp(0.1 + (v + 1.6) * 0.06 + hot * 0.7, 0, 1);
-        ctx.fillStyle = hot > 0.28 ? SIGNAL : '#0E0E10';
+        ctx.globalAlpha = clamp(0.05 + (v + 1.6) * 0.055 + hot * 0.75, 0, 1);
+        ctx.fillStyle = hot > 0.28 ? (hot > 0.6 ? '#B4B4FF' : FIELD_HOT) : '#EDEAE3';
         ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
       }
       ctx.globalAlpha = 1;
